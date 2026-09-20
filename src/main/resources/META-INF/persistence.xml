@@ -1,0 +1,6 @@
+<persistence-unit name="Peliculas-PU" transaction-type="JTA">
+    <jta-data-source>
+        jdbc/peliculas
+    </jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+</persistence-unit>
