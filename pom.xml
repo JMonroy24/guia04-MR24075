@@ -10,6 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jakartaee>11.0.0-M1</jakartaee>
+        <liberty.installDirectory>/opt/openliberty-26.0.0.8/wlp</liberty.installDirectory>
     </properties>
     
     <dependencies>
@@ -43,7 +44,7 @@
                 <version>3.12.2</version>
                 <configuration>
                     <serverName>guias_ppi115</serverName>
-                    <installDirectory>/home/jmonroy/openliberty-26.0.0.8/wlp</installDirectory>
+                    <installDirectory>${liberty.installDirectory}</installDirectory>
                 </configuration>
             </plugin>
         </plugins>
