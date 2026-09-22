@@ -1,11 +1,150 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
 
+    <h:head>
+        <title>Catálogo de películas</title>
+
+        <style type="text/css">
+            body {
+                background-color: #f4f6f8;
+                color: #1f2937;
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 32px;
+            }
+
+            .container {
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                margin: 0 auto;
+                max-width: 1200px;
+                padding: 24px;
+            }
+
+            .page-title {
+                margin: 0 0 8px;
+            }
+
+            .page-description {
+                color: #6b7280;
+                margin: 0 0 24px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .movie-table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            .movie-table th,
+            .movie-table td {
+                border: 1px solid #d1d5db;
+                padding: 12px;
+                text-align: left;
+                vertical-align: top;
+            }
+
+            .movie-table th {
+                background-color: #1f4e78;
+                color: #ffffff;
+            }
+
+            .movie-table tr:nth-child(even) {
+                background-color: #f8fafc;
+            }
+
+            .empty-message {
+                background-color: #eef2ff;
+                border: 1px solid #c7d2fe;
+                border-radius: 6px;
+                color: #3730a3;
+                padding: 16px;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <main class="container">
+            <h1 class="page-title">Catálogo de películas</h1>
+
+            <p class="page-description">
+                Resultados obtenidos mediante consultas JPQL.
+            </p>
+
+            <h:form id="formPeliculas">
+
+                <!-- Los controles de filtrado serán incorporados por Benito. -->
+
+                <h:panelGroup layout="block"
+                              styleClass="empty-message"
+                              rendered="#{empty peliculaBean.peliculas}">
+                    <h:outputText value="Seleccione una consulta para mostrar las películas."/>
+                </h:panelGroup>
+
+                <h:panelGroup layout="block"
+                              styleClass="table-container"
+                              rendered="#{not empty peliculaBean.peliculas}">
+
+                    <h:dataTable id="tablaPeliculas"
+                                 value="#{peliculaBean.peliculas}"
+                                 var="pelicula"
+                                 styleClass="movie-table">
+
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            <h:outputText value="#{pelicula.idPelicula}"/>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Título</f:facet>
+                            <h:outputText value="#{pelicula.titulo}"/>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Director</f:facet>
+                            <h:outputText
+                                value="#{pelicula.idDirector.nombres} #{pelicula.idDirector.apellidos}"/>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Fecha de estreno</f:facet>
+                            <h:outputText value="#{pelicula.fechaEstreno}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"
+                                                   timeZone="America/El_Salvador"/>
+                            </h:outputText>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Calificación</f:facet>
+                            <h:outputText value="#{pelicula.calificacion}">
+                                <f:convertNumber minFractionDigits="1"
+                                                 maxFractionDigits="1"/>
+                            </h:outputText>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Géneros</f:facet>
+
+                            <ui:repeat value="#{pelicula.generoList}"
+                                       var="genero"
+                                       varStatus="estado">
+                                <h:outputText value="#{genero.nombre}"/>
+                                <h:outputText value=", "
+                                              rendered="#{not estado.last}"/>
+                            </ui:repeat>
+                        </h:column>
+
+                    </h:dataTable>
+                </h:panelGroup>
+            </h:form>
+        </main>
     </h:body>
 </html>
