@@ -41,10 +41,6 @@ public class PeliculaBean implements Serializable {
         this.peliculas = peliculaRepository.listarCienciaFiccionYSuspense();
     }
 
-        public void cargarCienciaFiccionYSuspense() {
-        this.peliculas = peliculaRepository.listarCienciaFiccionYSuspense();
-    }
-
     public void cargarExcelentes() {
         this.peliculas = peliculaRepository.listarExcelentes();
     }
