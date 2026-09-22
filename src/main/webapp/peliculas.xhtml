@@ -68,6 +68,28 @@
                 color: #3730a3;
                 padding: 16px;
             }
+
+            .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.filtro-boton {
+    background-color: #1f4e78;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.filtro-boton:hover {
+    background-color: #163a5a;
+}
         </style>
     </h:head>
 
@@ -81,7 +103,35 @@
 
             <h:form id="formPeliculas">
 
-                <!-- Los controles de filtrado serán incorporados por Benito. -->
+                <h:panelGroup layout="block" styleClass="filtros">
+    <h:commandButton value="Todas (A-Z)"
+                     action="#{peliculaBean.cargarTodasOrdenASC}"
+                     styleClass="filtro-boton"/>
+
+    <h:commandButton value="Ciencia Ficción y Suspense"
+                     action="#{peliculaBean.cargarCienciaFiccionYSuspense}"
+                     styleClass="filtro-boton"/>
+
+    <h:commandButton value="Excelentes (≥ 8.5)"
+                     action="#{peliculaBean.cargarExcelentes}"
+                     styleClass="filtro-boton"/>
+
+    <h:commandButton value="Christopher Nolan"
+                     action="#{peliculaBean.cargarPorChristopherNolan}"
+                     styleClass="filtro-boton"/>
+
+    <h:commandButton value="Estrenos 2000-2010"
+                     action="#{peliculaBean.cargarAnios2000a2010}"
+                     styleClass="filtro-boton"/>
+
+    <h:commandButton value="Acción post-2010"
+                     action="#{peliculaBean.cargarAccionPost2010}"
+                     styleClass="filtro-boton"/>
+
+    <h:commandButton value="Drama (calificación &gt; 8.0)"
+                     action="#{peliculaBean.cargarDramaMayorA8}"
+                     styleClass="filtro-boton"/>
+</h:panelGroup>
 
                 <h:panelGroup layout="block"
                               styleClass="empty-message"

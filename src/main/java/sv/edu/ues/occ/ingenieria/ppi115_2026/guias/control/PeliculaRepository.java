@@ -74,4 +74,30 @@ public class PeliculaRepository implements Serializable {
                         Date.valueOf("2010-12-31"))
                 .getResultList();
     }
+
+        public List<Pelicula> listarAccionPost2010() {
+        return em.createQuery(
+                "SELECT DISTINCT p FROM Pelicula p "
+                + "JOIN FETCH p.idDirector "
+                + "LEFT JOIN FETCH p.generoList "
+                + "WHERE EXISTS (SELECT g FROM p.generoList g WHERE g.nombre = 'Acción') "
+                + "AND p.fechaEstreno > :fechaLimite "
+                + "ORDER BY p.fechaEstreno DESC",
+                Pelicula.class)
+                .setParameter("fechaLimite", Date.valueOf("2010-12-31"))
+                .getResultList();
+    }
+
+    public List<Pelicula> listarDramaMayorA8() {
+        return em.createQuery(
+                "SELECT DISTINCT p FROM Pelicula p "
+                + "JOIN FETCH p.idDirector "
+                + "LEFT JOIN FETCH p.generoList "
+                + "WHERE EXISTS (SELECT g FROM p.generoList g WHERE g.nombre = 'Drama') "
+                + "AND p.calificacion > :calificacionMinima "
+                + "ORDER BY p.calificacion DESC",
+                Pelicula.class)
+                .setParameter("calificacionMinima", new BigDecimal("8.0"))
+                .getResultList();
+    }
 }
