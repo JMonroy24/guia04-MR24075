@@ -19,6 +19,17 @@ public class PeliculaRepository implements Serializable {
     @PersistenceContext(unitName = "Peliculas-PU")
     private EntityManager em;
 
+    public int count() {
+        return ((Long) em.createQuery("SELECT COUNT(p) FROM Pelicula p").getSingleResult()).intValue();
+    }
+
+    public List<Pelicula> findRange(int first, int max) {
+        return em.createQuery("SELECT DISTINCT p FROM Pelicula p LEFT JOIN FETCH p.idDirector LEFT JOIN FETCH p.generoList ORDER BY p.idPelicula ASC", Pelicula.class)
+                .setFirstResult(first)
+                .setMaxResults(max)
+                .getResultList();
+    }
+
     public List<Pelicula> listarTodasOrdenASC() {
         return em.createQuery("SELECT DISTINCT p FROM Pelicula p LEFT JOIN FETCH p.idDirector LEFT JOIN FETCH p.generoList ORDER BY p.titulo ASC", Pelicula.class)
                 .getResultList();

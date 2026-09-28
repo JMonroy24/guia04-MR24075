@@ -4,11 +4,16 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026.guias.boundary.jsf;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import org.primefaces.model.FilterMeta;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.guias.control.PeliculaRepository;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.guias.entity.Pelicula;
 
@@ -24,6 +29,32 @@ public class PeliculaBean implements Serializable {
     private PeliculaRepository peliculaRepository;
     
     private List<Pelicula> peliculas;
+
+    private LazyDataModel<Pelicula> lazyModel;
+
+    @PostConstruct
+    public void init() {
+        lazyModel = new LazyDataModel<Pelicula>() {
+            @Override
+            public int count(Map<String, FilterMeta> filterBy) {
+                return peliculaRepository.count();
+            }
+
+            @Override
+            public List<Pelicula> load(int offset, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+                return peliculaRepository.findRange(offset, pageSize);
+            }
+        };
+    }
+
+    public LazyDataModel<Pelicula> getLazyModel() {
+        return lazyModel;
+    }
+
+    public void setLazyModel(LazyDataModel<Pelicula> lazyModel) {
+        this.lazyModel = lazyModel;
+    }
+
     
     public List<Pelicula> getPeliculas() {
         return peliculas;
