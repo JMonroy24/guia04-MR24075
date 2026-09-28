@@ -5,11 +5,12 @@
     <artifactId>guia03-MR24075</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>guia03-MR24075-1.0-SNAPSHOT</name>
+    <name>guia04-MR24075-1.0-SNAPSHOT</name>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jakartaee>11.0.0-M1</jakartaee>
+        <liberty.installDirectory>/opt/openliberty-26.0.0.8/wlp</liberty.installDirectory>
     </properties>
     
     <dependencies>
@@ -17,6 +18,14 @@
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
             <version>${jakartaee}</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>15.0.17</version>
+            <classifier>jakarta</classifier>
             <scope>provided</scope>
         </dependency>
     </dependencies>

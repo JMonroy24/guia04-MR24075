@@ -1,4 +1,4 @@
-package sv.edu.ues.occ.ingenieria.ppi115_2026.guias.guia03.mr24075.resources;
+package sv.edu.ues.occ.ingenieria.ppi115_2026.guias.guia04.mr24075.resources;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
