@@ -62,35 +62,28 @@
                 background-color: #f8fafc;
             }
 
-            .empty-message {
-                background-color: #eef2ff;
-                border: 1px solid #c7d2fe;
-                border-radius: 6px;
-                color: #3730a3;
-                padding: 16px;
+            .filtros {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 24px;
             }
 
-            .filtros {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 24px;
-}
+            .filtro-boton {
+                background-color: #1f4e78;
+                color: #ffffff;
+                border: none;
+                border-radius: 6px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+            }
 
-.filtro-boton {
-    background-color: #1f4e78;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 16px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.filtro-boton:hover {
-    background-color: #163a5a;
-}
+            .filtro-boton:hover {
+                background-color: #163a5a;
+            }
         </style>
     </h:head>
 
@@ -99,101 +92,107 @@
             <h1 class="page-title">Catálogo de películas</h1>
 
             <p class="page-description">
-                Resultados obtenidos mediante consultas JPQL.
+                Interfaces avanzadas con PrimeFaces y JPA.
             </p>
 
             <h:form id="formPeliculas">
 
-               <h:panelGroup layout="block" styleClass="filtros">
-    <p:outputLabel for="filtroTitulo" value="Título:"/>
-    <p:inputText id="filtroTitulo"
-                 value="#{peliculaBean.filtroTitulo}"
-                 placeholder="Buscar por título"/>
+                <h:panelGroup layout="block" styleClass="filtros">
+                    <p:outputLabel for="filtroTitulo" value="Título:"/>
+                    <p:inputText id="filtroTitulo"
+                                 value="#{peliculaBean.filtroTitulo}"
+                                 placeholder="Buscar por título"/>
 
-    <p:outputLabel for="rangoFechasEstreno"
-                   value="Rango de estreno:"/>
-    <p:datePicker id="rangoFechasEstreno"
-                  value="#{peliculaBean.rangoFechasEstreno}"
-                  selectionMode="range"
-                  pattern="dd/MM/yyyy"
-                  readonlyInput="false"
-                  monthNavigator="true"
-                  yearNavigator="true"
-                  yearRange="1900:2026"
-                  rangeSeparator=" - "
-                  placeholder="dd/MM/yyyy - dd/MM/yyyy"
-                  showIcon="true"/>
+                    <p:outputLabel for="filtroDirector" value="Director:"/>
+                    <p:inputText id="filtroDirector"
+                                 value="#{peliculaBean.filtroDirector}"
+                                 placeholder="Buscar por director"/>
 
-    <p:commandButton value="Buscar"
-                     action="#{peliculaBean.aplicarFiltros}"
-                     process="@this filtroTitulo rangoFechasEstreno"
-                     update="tablaPeliculas"
-                     styleClass="filtro-boton"/>
+                    <p:outputLabel for="generosSeleccionados" value="Género:"/>
+                    <p:selectCheckboxMenu id="generosSeleccionados"
+                                          value="#{peliculaBean.generosSeleccionados}"
+                                          label="Seleccionar géneros"
+                                          filter="true"
+                                          filterMatchMode="startsWith"
+                                          panelStyle="width: 250px"
+                                          scrollHeight="200">
+                        <f:selectItems value="#{peliculaBean.listaGeneros}"
+                                       var="g"
+                                       itemLabel="#{g.nombre}"
+                                       itemValue="#{g.idGenero}"/>
+                    </p:selectCheckboxMenu>
 
-    <p:commandButton value="Limpiar"
-                     action="#{peliculaBean.limpiarFiltros}"
-                     process="@this"
-                     update="filtroTitulo rangoFechasEstreno tablaPeliculas"
-                     styleClass="filtro-boton"/>
-</h:panelGroup>
+                    <p:outputLabel for="rangoFechasEstreno" value="Rango de estreno:"/>
+                    <p:datePicker id="rangoFechasEstreno"
+                                  value="#{peliculaBean.rangoFechasEstreno}"
+                                  selectionMode="range"
+                                  pattern="dd/MM/yyyy"
+                                  readonlyInput="false"
+                                  monthNavigator="true"
+                                  yearNavigator="true"
+                                  yearRange="1900:2026"
+                                  rangeSeparator=" - "
+                                  placeholder="dd/MM/yyyy - dd/MM/yyyy"
+                                  showIcon="true"/>
 
-                <h:panelGroup layout="block"
-                              styleClass="table-container">
+                    <p:commandButton value="Buscar"
+                                     action="#{peliculaBean.aplicarFiltros}"
+                                     process="@this filtroTitulo filtroDirector generosSeleccionados rangoFechasEstreno"
+                                     update="tablaPeliculas"
+                                     styleClass="filtro-boton"/>
 
+                    <p:commandButton value="Limpiar"
+                                     action="#{peliculaBean.limpiarFiltros}"
+                                     process="@this"
+                                     update="filtroTitulo filtroDirector generosSeleccionados rangoFechasEstreno tablaPeliculas"
+                                     styleClass="filtro-boton"/>
+                </h:panelGroup>
+
+                <h:panelGroup layout="block" styleClass="table-container">
                     <p:dataTable id="tablaPeliculas"
-             value="#{peliculaBean.lazyModel}"
-             var="pelicula"
-             lazy="true"
-             first="#{peliculaBean.first}"
-             paginator="true"
-             rows="10"
-             paginatorPosition="bottom"
-             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-             rowsPerPageTemplate="5,10,15"
-             styleClass="movie-table">
+                                 value="#{peliculaBean.lazyModel}"
+                                 var="pelicula"
+                                 lazy="true"
+                                 first="#{peliculaBean.first}"
+                                 paginator="true"
+                                 rows="10"
+                                 paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15"
+                                 styleClass="movie-table">
 
-    <p:column headerText="ID">
-        <h:outputText value="#{pelicula.idPelicula}"/>
-    </p:column>
+                        <p:column headerText="ID">
+                            <h:outputText value="#{pelicula.idPelicula}"/>
+                        </p:column>
 
-    <p:column headerText="Título"
-              field="titulo"
-              sortBy="#{pelicula.titulo}">
-        <h:outputText value="#{pelicula.titulo}"/>
-    </p:column>
+                        <p:column headerText="Título" field="titulo" sortBy="#{pelicula.titulo}">
+                            <h:outputText value="#{pelicula.titulo}"/>
+                        </p:column>
 
-    <p:column headerText="Director">
-        <h:outputText
-            value="#{pelicula.idDirector.nombres} #{pelicula.idDirector.apellidos}"/>
-    </p:column>
+                        <p:column headerText="Director">
+                            <h:outputText value="#{pelicula.idDirector.nombres} #{pelicula.idDirector.apellidos}"/>
+                        </p:column>
 
-    <p:column headerText="Fecha de estreno">
-        <h:outputText value="#{pelicula.fechaEstreno}">
-            <f:convertDateTime pattern="dd/MM/yyyy"
-                               timeZone="America/El_Salvador"/>
-        </h:outputText>
-    </p:column>
+                        <p:column headerText="Fecha de estreno">
+                            <h:outputText value="#{pelicula.fechaEstreno}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/El_Salvador"/>
+                            </h:outputText>
+                        </p:column>
 
-    <p:column headerText="Calificación"
-              field="calificacion"
-              sortBy="#{pelicula.calificacion}">
-        <h:outputText value="#{pelicula.calificacion}">
-            <f:convertNumber minFractionDigits="1"
-                             maxFractionDigits="1"/>
-        </h:outputText>
-    </p:column>
+                        <p:column headerText="Calificación" field="calificacion" sortBy="#{pelicula.calificacion}">
+                            <h:outputText value="#{pelicula.calificacion}">
+                                <f:convertNumber minFractionDigits="1" maxFractionDigits="1"/>
+                            </h:outputText>
+                        </p:column>
 
-    <p:column headerText="Géneros">
-        <ui:repeat value="#{pelicula.generoList}"
-                   var="genero"
-                   varStatus="estado">
-            <h:outputText value="#{genero.nombre}"/>
-            <h:outputText value=", "
-                          rendered="#{not estado.last}"/>
-        </ui:repeat>
-    </p:column>
+                        <p:column headerText="Géneros">
+                            <ui:repeat value="#{pelicula.generoList}" var="genero" varStatus="estado">
+                                <h:outputText value="#{genero.nombre}"/>
+                                <h:outputText value=", " rendered="#{not estado.last}"/>
+                            </ui:repeat>
+                        </p:column>
 
-                   </p:dataTable>
+                    </p:dataTable>
                 </h:panelGroup>
             </h:form>
         </main>
