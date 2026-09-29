@@ -104,33 +104,36 @@
 
             <h:form id="formPeliculas">
 
-                <h:panelGroup layout="block" styleClass="filtros">
-    <h:commandButton value="Todas (A-Z)"
-                     action="#{peliculaBean.cargarTodasOrdenASC}"
+               <h:panelGroup layout="block" styleClass="filtros">
+    <p:outputLabel for="filtroTitulo" value="Título:"/>
+    <p:inputText id="filtroTitulo"
+                 value="#{peliculaBean.filtroTitulo}"
+                 placeholder="Buscar por título"/>
+
+    <p:outputLabel for="rangoFechasEstreno"
+                   value="Rango de estreno:"/>
+    <p:datePicker id="rangoFechasEstreno"
+                  value="#{peliculaBean.rangoFechasEstreno}"
+                  selectionMode="range"
+                  pattern="dd/MM/yyyy"
+                  readonlyInput="false"
+                  monthNavigator="true"
+                  yearNavigator="true"
+                  yearRange="1900:2026"
+                  rangeSeparator=" - "
+                  placeholder="dd/MM/yyyy - dd/MM/yyyy"
+                  showIcon="true"/>
+
+    <p:commandButton value="Buscar"
+                     action="#{peliculaBean.aplicarFiltros}"
+                     process="@this filtroTitulo rangoFechasEstreno"
+                     update="tablaPeliculas"
                      styleClass="filtro-boton"/>
 
-    <h:commandButton value="Ciencia Ficción y Suspense"
-                     action="#{peliculaBean.cargarCienciaFiccionYSuspense}"
-                     styleClass="filtro-boton"/>
-
-    <h:commandButton value="Excelentes (≥ 8.5)"
-                     action="#{peliculaBean.cargarExcelentes}"
-                     styleClass="filtro-boton"/>
-
-    <h:commandButton value="Christopher Nolan"
-                     action="#{peliculaBean.cargarPorChristopherNolan}"
-                     styleClass="filtro-boton"/>
-
-    <h:commandButton value="Estrenos 2000-2010"
-                     action="#{peliculaBean.cargarAnios2000a2010}"
-                     styleClass="filtro-boton"/>
-
-    <h:commandButton value="Acción post-2010"
-                     action="#{peliculaBean.cargarAccionPost2010}"
-                     styleClass="filtro-boton"/>
-
-    <h:commandButton value="Drama (calificación &gt; 8.0)"
-                     action="#{peliculaBean.cargarDramaMayorA8}"
+    <p:commandButton value="Limpiar"
+                     action="#{peliculaBean.limpiarFiltros}"
+                     process="@this"
+                     update="filtroTitulo rangoFechasEstreno tablaPeliculas"
                      styleClass="filtro-boton"/>
 </h:panelGroup>
 
@@ -138,54 +141,59 @@
                               styleClass="table-container">
 
                     <p:dataTable id="tablaPeliculas"
-                                 value="#{peliculaBean.lazyModel}"
-                                 var="pelicula"
-                                 lazy="true"
-                                 paginator="true"
-                                 rows="10"
-                                 paginatorPosition="bottom"
-                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="5,10,15"
-                                 styleClass="movie-table">
+             value="#{peliculaBean.lazyModel}"
+             var="pelicula"
+             lazy="true"
+             first="#{peliculaBean.first}"
+             paginator="true"
+             rows="10"
+             paginatorPosition="bottom"
+             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+             rowsPerPageTemplate="5,10,15"
+             styleClass="movie-table">
 
-                        <p:column headerText="ID">
-                            <h:outputText value="#{pelicula.idPelicula}"/>
-                        </p:column>
+    <p:column headerText="ID">
+        <h:outputText value="#{pelicula.idPelicula}"/>
+    </p:column>
 
-                        <p:column headerText="Título">
-                            <h:outputText value="#{pelicula.titulo}"/>
-                        </p:column>
+    <p:column headerText="Título"
+              field="titulo"
+              sortBy="#{pelicula.titulo}">
+        <h:outputText value="#{pelicula.titulo}"/>
+    </p:column>
 
-                        <p:column headerText="Director">
-                            <h:outputText
-                                value="#{pelicula.idDirector.nombres} #{pelicula.idDirector.apellidos}"/>
-                        </p:column>
+    <p:column headerText="Director">
+        <h:outputText
+            value="#{pelicula.idDirector.nombres} #{pelicula.idDirector.apellidos}"/>
+    </p:column>
 
-                        <p:column headerText="Fecha de estreno">
-                            <h:outputText value="#{pelicula.fechaEstreno}">
-                                <f:convertDateTime pattern="dd/MM/yyyy"
-                                                   timeZone="America/El_Salvador"/>
-                            </h:outputText>
-                        </p:column>
+    <p:column headerText="Fecha de estreno">
+        <h:outputText value="#{pelicula.fechaEstreno}">
+            <f:convertDateTime pattern="dd/MM/yyyy"
+                               timeZone="America/El_Salvador"/>
+        </h:outputText>
+    </p:column>
 
-                        <p:column headerText="Calificación">
-                            <h:outputText value="#{pelicula.calificacion}">
-                                <f:convertNumber minFractionDigits="1"
-                                                 maxFractionDigits="1"/>
-                            </h:outputText>
-                        </p:column>
+    <p:column headerText="Calificación"
+              field="calificacion"
+              sortBy="#{pelicula.calificacion}">
+        <h:outputText value="#{pelicula.calificacion}">
+            <f:convertNumber minFractionDigits="1"
+                             maxFractionDigits="1"/>
+        </h:outputText>
+    </p:column>
 
-                        <p:column headerText="Géneros">
-                            <ui:repeat value="#{pelicula.generoList}"
-                                       var="genero"
-                                       varStatus="estado">
-                                <h:outputText value="#{genero.nombre}"/>
-                                <h:outputText value=", "
-                                              rendered="#{not estado.last}"/>
-                            </ui:repeat>
-                        </p:column>
+    <p:column headerText="Géneros">
+        <ui:repeat value="#{pelicula.generoList}"
+                   var="genero"
+                   varStatus="estado">
+            <h:outputText value="#{genero.nombre}"/>
+            <h:outputText value=", "
+                          rendered="#{not estado.last}"/>
+        </ui:repeat>
+    </p:column>
 
-                    </p:dataTable>
+                   </p:dataTable>
                 </h:panelGroup>
             </h:form>
         </main>
